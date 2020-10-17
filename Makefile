@@ -6,9 +6,9 @@ install:
 	docker build -t $(Myapp) .
 
 server:
-	docker run -d --network bridge \
+	docker run -d \
 	  --name mongo-server mongo
-	docker run -d --network bridge \
+	docker run -d \
 	  --name mongo-express \
 	  -e ME_CONFIG_MONGODB_SERVER=mongo-server \
 	  -p 8081:8081 \
@@ -19,7 +19,6 @@ run: install
 	docker run -it \
 	  --rm \
 	  -p 80:3000 \
-	  --network bridge \
 	  -e "NODE_ENV=production" \
 	  -u "node" \
 	  --name "$(Myapp)" \
