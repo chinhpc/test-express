@@ -1,0 +1,17 @@
+#build: docker build -t mynode --build-arg SSH_KEY="$(cat ~/.ssh/id_rsa.pub)" -f Nodejs_dockerfile_with_ssh .
+#run: docker run -d -it --name node -p 2222:22 -p 3000:3000 mynode
+#ssh: ssh -p 2222 node@localhost
+
+# specify the node base image with your desired version node:<version>
+FROM node:latest
+
+ARG SSH_KEY
+
+RUN apt update && apt install -y openssh-server
+USER node
+RUN mkdir /home/node/.ssh
+RUN echo "$SSH_KEY" > /home/node/.ssh/authorized_keys
+#RUN chown -R node:node /home/node/.ssh
+#RUN chmod -R 700 /home/node/.ssh
+USER root
+CMD /etc/init.d/ssh start ; /bin/bash
